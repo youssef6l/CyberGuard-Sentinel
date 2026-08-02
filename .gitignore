@@ -1,0 +1,7 @@
+uploads/  
+__pycache__/  
+.idea/  
+*.mp4  
+*.exe  
+*.jpeg  
+*.docx 

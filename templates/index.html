@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Sentinel  - Malware Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <canvas id="matrix-canvas"></canvas>
+    <div id="cursor-glow-wrap">
+        <div id="cursor-glow-spot"></div>
+        <div id="cursor-glow-beam"></div>
+    </div>
+    <div id="scroll-progress-bar"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>CyberGuard Sentinel </span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#upload" class="nav-link active">
+                        <i class="fas fa-upload"></i><span>Analyze</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#results" class="nav-link">
+                        <i class="fas fa-chart-bar"></i><span>Results</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">
+                        <i class="fas fa-info-circle"></i><span>About</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#url-scanner" class="nav-link">
+                        <i class="fas fa-link"></i><span>URL Scanner</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#usb-scanner" class="nav-link">
+                        <i class="fas fa-usb"></i><span>USB Guard</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- ══════════════ HERO ══════════════ -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-line">Advanced</span>
+                        <span class="title-line highlight">Malware Analysis</span>
+                        <span class="title-line">Platform</span>
+                    </h1>
+                    <p class="hero-description">
+                        Hybrid malware analysis combining static analysis, sandbox execution,
+                        VirusTotal reputation, and AI-powered attack chain detection.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary" onclick="scrollToUpload()">
+                            <i class="fas fa-rocket"></i> Start Analysis
+                        </button>
+                        <button class="btn-secondary" onclick="scrollToAbout()">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="cyber-circle">
+                        <div class="circle-inner">
+                            <div class="circle-ring"></div>
+                            <div class="circle-ring"></div>
+                            <div class="circle-ring"></div>
+                            <div class="circle-center">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>SENTINEL</span>
+                            </div>
+                        </div>
+                        <div class="floating-icons">
+                            <i class="fas fa-bug"></i>
+                            <i class="fas fa-virus"></i>
+                            <i class="fas fa-search"></i>
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ STATS ══════════════ -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><i class="fas fa-fingerprint"></i></div>
+                    <div class="stat-content"><h3 class="stat-number">SHA-256</h3><p class="stat-label">Hash Analysis</p></div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><i class="fas fa-virus"></i></div>
+                    <div class="stat-content"><h3 class="stat-number">76+</h3><p class="stat-label">AV Engines</p></div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><i class="fas fa-microscope"></i></div>
+                    <div class="stat-content"><h3 class="stat-number">PE</h3><p class="stat-label">Static Analysis</p></div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><i class="fas fa-box"></i></div>
+                    <div class="stat-content"><h3 class="stat-number">VMware</h3><p class="stat-label">Sandbox</p></div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="stat-content"><h3 class="stat-number">EDR</h3><p class="stat-label">Attack Chains</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ UPLOAD ══════════════ -->
+        <section class="upload-section" id="upload">
+            <div class="section-header">
+                <h2 class="section-title reveal">
+                    <i class="fas fa-upload"></i> Upload & <span class="highlight">Analyze</span>
+                </h2>
+                <p class="section-subtitle reveal">Upload your .exe file for comprehensive malware analysis</p>
+            </div>
+            <div class="upload-container">
+                <div class="upload-card reveal">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <h3>Drop your .exe file here</h3>
+                        <p>or click to browse</p>
+                        <input type="file" id="fileInput" accept=".exe" hidden>
+                        <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-folder-open"></i> Browse File
+                        </button>
+                    </div>
+                    <div class="file-info" id="fileInfo" style="display:none;">
+                        <div class="file-details">
+                            <i class="fas fa-file-code"></i>
+                            <div>
+                                <p id="fileName">filename.exe</p>
+                                <p id="fileSize" class="file-size">0 KB</p>
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="analyzeBtn" onclick="analyzeFile()">
+                            <i class="fas fa-search"></i> Analyze File
+                        </button>
+                    </div>
+                </div>
+                <div class="progress-card reveal" id="progressCard" style="display:none;">
+                    <h3><i class="fas fa-cog fa-spin"></i> Analysis in Progress...</h3>
+                    <div class="progress-steps">
+                        <div class="step" id="step1"><i class="fas fa-fingerprint"></i><span>Hashing</span><div class="step-status"><i class="fas fa-spinner fa-spin"></i></div></div>
+                        <div class="step" id="step2"><i class="fas fa-virus"></i><span>VirusTotal</span><div class="step-status"><i class="fas fa-clock"></i></div></div>
+                        <div class="step" id="step3"><i class="fas fa-microscope"></i><span>Static Analysis</span><div class="step-status"><i class="fas fa-clock"></i></div></div>
+                        <div class="step" id="step4"><i class="fas fa-box"></i><span>Sandbox</span><div class="step-status"><i class="fas fa-clock"></i></div></div>
+                        <div class="step" id="step5"><i class="fas fa-project-diagram"></i><span>Behavior Analysis</span><div class="step-status"><i class="fas fa-clock"></i></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ RESULTS ══════════════ -->
+        <section class="results-section" id="results" style="display:none;">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i> Analysis <span class="highlight">Results</span>
+                </h2>
+            </div>
+            <div class="results-container">
+                <div class="verdict-card" id="verdictCard">
+                    <div class="verdict-icon" id="verdictIcon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="verdict-content">
+                        <h2 id="verdictText">ANALYZING...</h2>
+                        <p id="threatLevel">Threat Level: --</p>
+                        <p id="sandboxStatus">Sandbox: --</p>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-card">
+                        <h3><i class="fas fa-file-code"></i> File Information</h3>
+                        <div class="info-item"><span class="info-label">Filename:</span><span class="info-value" id="resFilename">--</span></div>
+                        <div class="info-item"><span class="info-label">SHA-256:</span><span class="info-value hash" id="resSha256">--</span></div>
+                        <div class="info-item"><span class="info-label">Valid PE:</span><span class="info-value" id="resValidPE">--</span></div>
+                        <div class="info-item"><span class="info-label">Packed:</span><span class="info-value" id="resPacked">--</span></div>
+                        <div class="info-item"><span class="info-label">Total Strings:</span><span class="info-value" id="resTotalStrings">--</span></div>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-virus"></i> VirusTotal Results</h3>
+                        <div class="vt-gauge">
+                            <div class="gauge-circle" id="vtGauge">
+                                <span id="vtMalicious">0</span>
+                                <small>/ <span id="vtTotal">0</span></small>
+                            </div>
+                            <p>Malicious Engines</p>
+                        </div>
+                        <div class="info-item"><span class="info-label">Clean Engines:</span><span class="info-value success" id="vtClean">--</span></div>
+                        <div class="info-item"><span class="info-label">VT Verdict:</span><span class="info-value" id="vtVerdict">--</span></div>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-box"></i> Sandbox Results</h3>
+                        <div class="info-item"><span class="info-label">Status:</span><span class="info-value" id="sandboxStatusCard">--</span></div>
+                        <div class="info-item"><span class="info-label">Total Events:</span><span class="info-value" id="sandboxEvents">--</span></div>
+                        <div class="sandbox-events" id="sandboxEventsList"></div>
+                    </div>
+                </div>
+                <div class="chains-card" id="chainsCard">
+                    <h3><i class="fas fa-project-diagram"></i> Detected Attack Chains</h3>
+                    <div id="chainsList"></div>
+                </div>
+                <div class="strings-card">
+                    <h3><i class="fas fa-code"></i> Suspicious Strings</h3>
+                    <div class="strings-list" id="stringsList"></div>
+                </div>
+                <div class="download-card">
+                    <h3><i class="fas fa-file-pdf"></i> Download Full Report</h3>
+                    <p>Get a comprehensive PDF report with all analysis details</p>
+                    <button class="btn-primary" id="downloadBtn" onclick="downloadReport()">
+                        <i class="fas fa-download"></i> Download PDF Report
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ ABOUT ══════════════ -->
+        <section class="about-section" id="about">
+            <div class="section-header">
+                <h2 class="section-title reveal">How It <span class="highlight">Works</span></h2>
+            </div>
+            <div class="about-container">
+                <div class="about-card reveal">
+                    <div class="about-icon"><i class="fas fa-fingerprint"></i></div>
+                    <h3>1. Hash & Reputation</h3>
+                    <p>SHA-256 hash computed and checked against VirusTotal's 76+ antivirus engines</p>
+                </div>
+                <div class="about-card reveal">
+                    <div class="about-icon"><i class="fas fa-microscope"></i></div>
+                    <h3>2. Static Analysis</h3>
+                    <p>PE headers analyzed, suspicious imports detected, strings extracted</p>
+                </div>
+                <div class="about-card reveal">
+                    <div class="about-icon"><i class="fas fa-box"></i></div>
+                    <h3>3. Sandbox Execution</h3>
+                    <p>File executed in isolated VMware VM, monitoring processes, files, registry & network</p>
+                </div>
+                <div class="about-card reveal">
+                    <div class="about-icon"><i class="fas fa-project-diagram"></i></div>
+                    <h3>4. Attack Chain Detection</h3>
+                    <p>EDR-inspired engine detects attack patterns like persistence, injection & ransomware</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ URL SCANNER ══════════════ -->
+        <section class="upload-section" id="url-scanner" style="padding-top:2rem;">
+            <div class="upload-container">
+                <div class="upload-header reveal" style="text-align:center; margin-bottom:2rem;">
+                    <h2 class="section-title">
+                        <i class="fas fa-link" style="color:var(--accent-color);"></i>
+                        URL <span class="highlight">Threat</span> Scanner
+                    </h2>
+                    <p class="section-subtitle">Analyze any URL for phishing, malware distribution, and suspicious indicators</p>
+                </div>
+
+                <div class="upload-card reveal" style="max-width:700px; margin:0 auto;">
+                    <div style="padding:2rem;">
+                        <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                            <input type="text" id="url-input"
+                                placeholder="https://example.com/suspicious-page"
+                                style="flex:1; min-width:250px; padding:0.85rem 1.2rem;
+                                       background:rgba(255,255,255,0.05);
+                                       border:1px solid rgba(0,212,255,0.3); border-radius:8px;
+                                       color:var(--text-color); font-family:'Exo 2',sans-serif;
+                                       font-size:0.95rem; outline:none;"
+                                onkeydown="if(event.key==='Enter') scanUrl()" />
+                            <button class="btn-primary" onclick="scanUrl()" id="scan-url-btn" style="white-space:nowrap;">
+                                <i class="fas fa-search"></i> Scan URL
+                            </button>
+                        </div>
+
+                        <!-- URL Results -->
+                        <div id="url-results" style="display:none; margin-top:1.5rem;">
+                            <div id="url-risk-banner" style="padding:1rem 1.5rem; border-radius:10px;
+                                display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem;
+                                font-family:'Orbitron',sans-serif; font-size:1rem; font-weight:600;">
+                                <i id="url-risk-icon" class="fas fa-shield-alt" style="font-size:1.6rem;"></i>
+                                <div>
+                                    <div id="url-risk-label">Risk Level</div>
+                                    <div id="url-risk-score" style="font-size:0.8rem; font-family:'Exo 2',sans-serif; font-weight:400; margin-top:2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1rem;">
+                                <div class="stat-card" style="padding:0.8rem 1rem;">
+                                    <div style="color:var(--text-color-light); font-size:0.75rem; margin-bottom:4px;">DOMAIN</div>
+                                    <div id="url-domain" style="color:var(--accent-color); font-size:0.9rem; word-break:break-all;"></div>
+                                </div>
+                                <div class="stat-card" style="padding:0.8rem 1rem;">
+                                    <div style="color:var(--text-color-light); font-size:0.75rem; margin-bottom:4px;">IP ADDRESS</div>
+                                    <div id="url-ip" style="color:var(--accent-color); font-size:0.9rem;"></div>
+                                </div>
+                                <div class="stat-card" style="padding:0.8rem 1rem;">
+                                    <div style="color:var(--text-color-light); font-size:0.75rem; margin-bottom:4px;">HTTPS</div>
+                                    <div id="url-https" style="font-size:0.9rem;"></div>
+                                </div>
+                                <div class="stat-card" style="padding:0.8rem 1rem;">
+                                    <div style="color:var(--text-color-light); font-size:0.75rem; margin-bottom:4px;">SSL STATUS</div>
+                                    <div id="url-ssl" style="color:var(--accent-color); font-size:0.9rem;"></div>
+                                </div>
+                            </div>
+
+                            <div id="url-flags-container" style="display:none;">
+                                <div style="color:var(--text-color-light); font-size:0.8rem; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:1px;">
+                                    <i class="fas fa-exclamation-triangle" style="color:var(--warning-color);"></i>
+                                    Detected Indicators
+                                </div>
+                                <ul id="url-flags-list" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.4rem;"></ul>
+                            </div>
+                        </div>
+
+                        <!-- URL Loading -->
+                        <div id="url-loading" style="display:none; text-align:center; padding:1.5rem 0; color:var(--accent-color);">
+                            <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i>
+                            <p style="margin-top:0.5rem; font-size:0.9rem;">Scanning URL...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════ USB GUARD SCANNER ══════════════ -->
+        <section class="upload-section" id="usb-scanner" style="padding-top:2rem; padding-bottom:4rem;">
+            <div class="upload-container">
+
+                <div style="text-align:center; margin-bottom:2rem;">
+                    <h2 class="section-title reveal">
+                        <i class="fas fa-usb" style="color:var(--accent-color);"></i>
+                        USB <span class="highlight">Guard</span> Scanner
+                    </h2>
+                    <p class="section-subtitle reveal">
+                        Automatically detects and scans connected USB drives for malware, autoruns &amp; suspicious files
+                    </p>
+                </div>
+
+                <div class="upload-card reveal" style="max-width:650px; margin:0 auto; padding:2.5rem; text-align:center;">
+                    <div class="usb-icon-wrap" style="margin:0 auto 1.5rem;">
+                        <i class="fas fa-usb"></i>
+                    </div>
+                    <p style="color:var(--text-color-light); margin-bottom:1.5rem; font-size:0.95rem; line-height:1.7;">
+                        Click <strong style="color:var(--accent-color);">Scan USB Drives</strong> to detect all connected
+                        removable drives and check them for autoruns, hidden files, and malicious executables.
+                    </p>
+                    <button class="btn-primary" id="usb-scan-btn" onclick="scanUsb()"
+                            style="font-size:1rem; padding:0.9rem 2.5rem; margin:0 auto;">
+                        <i class="fas fa-search"></i> Scan USB Drives
+                    </button>
+
+                    <div id="usb-loading" style="display:none; margin-top:1.5rem; color:var(--accent-color);">
+                        <i class="fas fa-spinner fa-spin" style="font-size:1.8rem;"></i>
+                        <p style="margin-top:0.7rem; font-size:0.9rem;">Scanning connected USB drives...</p>
+                    </div>
+
+                    <div id="usb-no-drives" style="display:none; margin-top:1.5rem;">
+                        <i class="fas fa-plug" style="font-size:2.5rem; color:var(--text-color-light);"></i>
+                        <p style="margin-top:0.8rem; color:var(--text-color-light);">
+                            No USB drives detected. Connect a USB device and try again.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="usb-results" style="display:none; width:100%; max-width:900px; margin:2rem auto 0;">
+                    <div id="usb-overall-banner" class="usb-banner">
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <i id="usb-banner-icon" class="fas fa-shield-alt" style="font-size:2.2rem;"></i>
+                            <div>
+                                <div id="usb-banner-title" style="font-family:'Orbitron',sans-serif; font-size:1.2rem; font-weight:700;"></div>
+                                <div id="usb-banner-sub"   style="font-size:0.85rem; margin-top:4px; opacity:0.85;"></div>
+                            </div>
+                        </div>
+                        <div id="usb-blocked-badge" style="display:none;" class="usb-blocked-badge">
+                            <i class="fas fa-ban"></i> BLOCKED
+                        </div>
+                    </div>
+                    <div id="usb-drives-list"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ══════════════ FOOTER ══════════════ -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>CyberGuard Sentinel</span>
+                    </div>
+                    <p class="footer-tagline">Advanced Hybrid Malware Analysis Platform</p>
+                    <p class="footer-copyright">© 2026 CyberGuard Sentinel. For educational purposes only.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>This tool is intended for authorized security testing only.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
