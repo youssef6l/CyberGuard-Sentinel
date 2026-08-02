@@ -245,8 +245,7 @@ Action:       Quarantine immediately.
 
 ## 👨‍💻 Author
 
-**[Your Name]**
-Computer Science · [University Name] · Graduation Project 2026
+**[Youssef]**
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://linkedin.com/in/YOUR_PROFILE)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=flat&logo=github)](https://github.com/YOUR_USERNAME)
